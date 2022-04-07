@@ -1,18 +1,52 @@
 package main
 
 import (
+	"encoding/json"
 	"log"
 	"net/http"
+	"regexp"
 )
 
-type articleHandler struct {}
+// Regexp to validate each endpoints.
+var listArticleRe = regexp.MustCompile(`^/articles[/]*$`)
 
-func (h *articleHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {}
+// articleHandler is an implementation of custom ServeMux.
+type articleHandler struct{}
 
-func main () {
-	const PORT = ":8000"
+// List responses the list of all available articles.
+func (h *articleHandler) List(w http.ResponseWriter) {
+	jsonBytes, err := json.Marshal(articles)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+	_, err = w.Write(jsonBytes)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+}
+
+// ServeHTTP is a default handler to given endpoint pattern from ServeMux.
+func (h *articleHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("content-type", "application/json")
+	switch {
+	case r.Method == http.MethodGet && listArticleRe.MatchString(r.URL.Path):
+		h.List(w)
+		return
+	}
+}
+
+func main() {
+	// configurations
+	const port = ":8000"
 	mux := http.NewServeMux()
+
+	// custom handlers
 	mux.Handle("/articles", &articleHandler{})
-	log.Printf("Server listening at http://localhost%v\n", PORT)
-	log.Fatal(http.ListenAndServe(PORT, mux))
+	mux.Handle("/articles/", &articleHandler{})
+
+	log.Printf("Server listening at http://localhost%v\n", port)
+	log.Fatal(http.ListenAndServe(port, mux))
 }
