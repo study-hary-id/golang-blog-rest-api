@@ -19,19 +19,14 @@ GET /articles
 
 ```json
 {
-  "links": {
-    "self": "https://example.com/articles",
-    "next": "https://example.com/articles?page[offset]=2",
-    "last": "https://example.com/articles?page[offset]=10"
-  },
   "data": [{
     "type": "articles",
     "id": "1",
     "attributes": {
       "title": "JSON:API paints my bikeshed!",
       "date": "July 23, 2019",
-      "comments": "0",
-      "body": ""
+      "body": "",
+      "featured": true
     },
     "links": {
       "self": "https://example.com/articles/1",
