@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"log"
 	"net/http"
 )
@@ -9,22 +8,8 @@ import (
 // articleHandler is a Handler that handles articles operation.
 type articleHandler struct{}
 
-// List responses the list of all available articles.
-func (h *articleHandler) List(w http.ResponseWriter) {
-	jsonBytes, err := json.Marshal(articles)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	w.WriteHeader(http.StatusOK)
-	_, err = w.Write(jsonBytes)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-}
-
-// ServeHTTP is a default handler to given endpoint pattern from ServeMux.
+// ServeHTTP is a default listener for each custom multiplexer,
+// it handles every subtrees of given endpoint pattern.
 func (h *articleHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("content-type", "application/json")
 	switch {
@@ -32,6 +17,15 @@ func (h *articleHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		h.List(w)
 		return
 	}
+}
+
+// List gives all article resources.
+func (h *articleHandler) List(w http.ResponseWriter, r *http.Request) {
+	articles, err := getArticles()
+	if err != nil {
+		internalServerError(w, err)
+	}
+	responseJSON(w, r, articles, http.StatusOK)
 }
 
 func main() {
