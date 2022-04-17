@@ -13,7 +13,6 @@ import (
 //	*sync.RWMutex
 //}
 
-// article is defined article type.
 type article struct {
 	ID       int       `json:"id"`
 	Title    string    `json:"title"`

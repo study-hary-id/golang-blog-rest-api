@@ -20,7 +20,7 @@ func constructArticle(article article) map[string]interface{} {
 
 // constructItems checks the actual type of `data` and
 // calls proper function to process the generic `data`,
-// then returns the constructed items as a key value pair.
+// then returns the constructed items as a generic map.
 func constructItems(data interface{}) map[string]interface{} {
 	items := map[string]interface{}{
 		"data": nil,

@@ -12,9 +12,9 @@ type articleHandler struct{}
 // it handles every subtrees of given endpoint pattern.
 func (h *articleHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("content-type", "application/json")
-	switch {
-	case r.Method == http.MethodGet && listArticleRe.MatchString(r.URL.Path):
-		h.List(w)
+	switch r.Method {
+	case http.MethodGet:
+		h.List(w, r)
 		return
 	}
 }
