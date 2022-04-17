@@ -4,13 +4,9 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"regexp"
 )
 
-// Regexp to validate each endpoints.
-var listArticleRe = regexp.MustCompile(`^/articles[/]*$`)
-
-// articleHandler is an implementation of custom ServeMux.
+// articleHandler is a Handler that handles articles operation.
 type articleHandler struct{}
 
 // List responses the list of all available articles.
@@ -44,7 +40,6 @@ func main() {
 	mux := http.NewServeMux()
 
 	// custom handlers
-	mux.Handle("/articles", &articleHandler{})
 	mux.Handle("/articles/", &articleHandler{})
 
 	log.Printf("Server listening at http://localhost%v\n", port)
