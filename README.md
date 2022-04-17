@@ -5,33 +5,39 @@ framework. The main purpose of this project is to be used on my own simple blog 
 
 ## Endpoints
 
-| HTTP Verb | Path        | Action            | Resource |
-| --------- | ----------- | ----------------- | -------- |
-| GET       | `/articles` | Show all articles | Articles |
+| HTTP Verb | Path         | Action                   | Resource |
+| --------- | ------------ | ------------------------ | -------- |
+| GET       | `/articles`  | Redirect to `/articles/` | Articles |
+| GET       | `/articles/` | Get all articles         | Articles |
 
-### Show all articles
+### Get all articles
 
 ```http request
-GET /articles
+GET /articles 301 Moved Permanently
+```
+```http request
+GET /articles/ 200 OK
 ```
 
 #### Successful response
 
 ```json
 {
-  "data": [{
-    "type": "articles",
-    "id": "1",
-    "attributes": {
-      "title": "JSON:API paints my bikeshed!",
-      "date": "July 23, 2019",
-      "body": "",
-      "featured": true
-    },
-    "links": {
-      "self": "https://example.com/articles/1",
-      "cover": "https://example.com/static/img/1.jpg"
+  "data": [
+    {
+      "type": "articles",
+      "id": "1",
+      "attributes": {
+        "title": "JSON:API paints my bikeshed!",
+        "date": "July 23, 2019",
+        "body": "",
+        "featured": true
+      },
+      "links": {
+        "self": "https://example.com/articles/1",
+        "cover": "https://example.com/static/img/1.jpg"
+      }
     }
-  }]
+  ]
 }
 ```
