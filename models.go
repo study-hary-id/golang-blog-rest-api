@@ -1,43 +1,56 @@
 package main
 
 import (
-	"sync"
+	"fmt"
 	"time"
 )
-
-// links contain two resource, one is detail article,
-// and the second is the cover of the article.
-type links struct {
-	Self  string `json:"self"`
-	Cover string `json:"cover"`
-}
-
-// attributes contain the content of an article and
-// metadata for the article itself.
-type attributes struct {
-	Title    string    `json:"title"`
-	Body     string    `json:"body"`
-	Date     time.Time `json:"date"`
-	Featured bool      `json:"featured"`
-}
-
-// article contains structure for article resource.
-type article struct {
-	Type       string     `json:"type"`
-	ID         string     `json:"id"`
-	Attributes attributes `json:"attributes"`
-	Links      links      `json:"links"`
-}
 
 // Our in-memory datastore,
 // datastore used to map the list of users.
 // Remember to guard map access with a mutex for concurrent access.
-type datastore struct {
-	m map[string]article
-	*sync.RWMutex
+//type datastore struct {
+//	m map[string]user
+//	*sync.RWMutex
+//}
+
+// article is defined article type.
+type article struct {
+	ID       int       `json:"id"`
+	Title    string    `json:"title"`
+	Body     string    `json:"body"`
+	Date     time.Time `json:"date"`
+	Featured bool      `json:"featured"`
+	Cover    string    `json:"cover"`
 }
 
-// payload is a structure for json response data.
-type payload struct {
-	Data []article `json:"data"`
+// getSelfLink returns the link to current article.
+func (a *article) getSelfLink() string {
+	return fmt.Sprintf("http://localhost:8000/articles/%d", a.ID)
+}
+
+// getArticles returns the list of all articles.
+func getArticles() ([]article, error) {
+	rows, err := db.Query(`SELECT * FROM articles`)
+	if err != nil {
+		return nil, err
+	}
+
+	// Bind rows to articles.
+	var articles []article
+	for rows.Next() {
+		article := article{}
+		err := rows.Scan(
+			&article.ID,
+			&article.Title,
+			&article.Body,
+			&article.Featured,
+			&article.Cover,
+			&article.Date,
+		)
+		if err != nil {
+			return nil, err
+		}
+		articles = append(articles, article)
+	}
+	return articles, nil
 }
