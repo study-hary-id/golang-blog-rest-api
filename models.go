@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 	"time"
 )
@@ -27,14 +28,12 @@ func (a *article) getSelfLink() string {
 	return fmt.Sprintf("http://localhost:8000/articles/%d", a.ID)
 }
 
-// getArticles returns the list of all articles.
-func getArticles() ([]article, error) {
-	rows, err := db.Query(`SELECT * FROM articles`)
-	if err != nil {
-		return nil, err
-	}
+/*
+API to communicate between article with datastore.
+*/
 
-	// Bind rows to articles.
+// bindRowsArticles binds the database query rows then returns article slice.
+func bindRowsArticles(rows *sql.Rows) (interface{}, error) {
 	var articles []article
 	for rows.Next() {
 		article := article{}
