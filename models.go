@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"net/url"
 	"time"
 )
 
@@ -51,4 +52,55 @@ func bindRowsArticles(rows *sql.Rows) (interface{}, error) {
 		articles = append(articles, article)
 	}
 	return articles, nil
+}
+
+// buildQueryArticles builds database query from URL queries,
+// returns the query and it's required values.
+func buildQueryArticles(queries url.Values) (string, []interface{}) {
+	var (
+		query    = `SELECT * FROM articles `
+		featured = queries.Get("featured")
+		limit    = queries.Get("limit")
+		sort     = queries.Get("sort")
+		values   []interface{}
+	)
+
+	// Checks featured query.
+	if featured != "" {
+		query += `WHERE featured=? `
+		values = append(values, URLConv(featured))
+	}
+
+	// TODO: Known bug maybe, cannot assign DESC/ASC to `?`.
+	// That's why they use hardcode SQL syntax.
+	// TODO: Replace ORDER BY `id` to `created_at`.
+	switch sort {
+	case "desc":
+		query += `ORDER BY id DESC `
+	case "asc":
+		query += `ORDER BY id ASC `
+	}
+
+	// Check limit query.
+	if limit != "" {
+		query += `LIMIT ? `
+		values = append(values, URLConv(limit))
+	}
+	return query, values
+}
+
+// getArticles returns the list of articles, from URL queries.
+func getArticles(queries url.Values) ([]article, error) {
+	query, values := buildQueryArticles(queries)
+	// Query to database with values.
+	rows, err := db.Query(query, values...)
+	if err != nil {
+		return nil, err
+	}
+	// Bind rows to articles.
+	articles, err := bindRowsArticles(rows)
+	if err != nil {
+		return nil, err
+	}
+	return articles.([]article), nil
 }
