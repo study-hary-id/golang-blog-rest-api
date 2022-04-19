@@ -21,9 +21,11 @@ func (h *articleHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 // List gives all article resources.
 func (h *articleHandler) List(w http.ResponseWriter, r *http.Request) {
-	articles, err := getArticles()
+	queries := r.URL.Query()
+	articles, err := getArticles(queries)
 	if err != nil {
 		internalServerError(w, err)
+		return
 	}
 	responseJSON(w, r, articles, http.StatusOK)
 }
