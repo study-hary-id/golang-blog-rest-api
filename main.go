@@ -11,7 +11,8 @@ type articleHandler struct{}
 // ServeHTTP is a default listener for each custom multiplexer,
 // it handles every subtrees of given endpoint pattern.
 func (h *articleHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("content-type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Content-Type", "application/json")
 	switch r.Method {
 	case http.MethodGet:
 		h.List(w, r)
