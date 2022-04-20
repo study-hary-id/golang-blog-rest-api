@@ -5,15 +5,15 @@ framework. The main purpose of this project is to be used on my own simple blog 
 
 ## Endpoints
 
-| HTTP Verb | Path                       | Action                        | Resource |
-| --------- | -------------------------- | ----------------------------- | -------- |
-| GET       | `/articles`                | Redirect to `/articles/`      | Articles |
-| GET       | `/articles/`               | Get all articles              | Articles |
-| GET       | `/articles?featured=true`  | Get all featured articles     | Articles |
-| GET       | `/articles?featured=false` | Get all ordinary articles     | Articles |
-| GET       | `/articles?sort=desc`      | Get articles descending order | Articles |
-| GET       | `/articles?sort=asc`       | Get articles ascending order  | Articles |
-| GET       | `/articles?limit=1`        | Get articles as much as limit | Articles |
+| HTTP Verb | Path                        | Action                        | Resource |
+| --------- | --------------------------- | ----------------------------- | -------- |
+| GET       | `/articles`                 | Redirect to `/articles/`      | Articles |
+| GET       | `/articles/`                | Get all articles              | Articles |
+| GET       | `/articles/?featured=true`  | Get all featured articles     | Articles |
+| GET       | `/articles/?featured=false` | Get all ordinary articles     | Articles |
+| GET       | `/articles/?sort=desc`      | Get articles descending order | Articles |
+| GET       | `/articles/?sort=asc`       | Get articles ascending order  | Articles |
+| GET       | `/articles/?limit=1`        | Get articles as much as limit | Articles |
 
 ### Get all articles
 
