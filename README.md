@@ -47,3 +47,7 @@ GET /articles/ 200 OK
   ]
 }
 ```
+
+## Credits
+
+[Golang REST API Example [Without Framework]](https://golang.cafe/blog/golang-rest-api-example.html)
