@@ -37,6 +37,9 @@ func main() {
 
 	// custom handlers
 	mux.Handle("/articles/", &articleHandler{})
+	mux.Handle("/images/", http.StripPrefix(
+		"/images/", http.FileServer(http.Dir("static/images")),
+	))
 
 	log.Printf("Server listening at http://localhost%v\n", port)
 	log.Fatal(http.ListenAndServe(port, mux))
